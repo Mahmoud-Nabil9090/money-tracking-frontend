@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import ThemeToggle from "../components/ThemeToggle";
+
 function Home() {
   const developers = [
     {
@@ -50,12 +53,14 @@ function Home() {
       task: "US-101 / US-104",
       pages: [
         {
-          name: "Add Income",
-          description: "إضافة مصدر دخل جديد",
+          name: "Add Income (US-101)",
+          description: "إضافة مصدر دخل جديد (/income/new)",
+          path: "/income/new",
         },
         {
-          name: "Edit Income",
-          description: "تعديل بيانات مصدر الدخل",
+          name: "Edit Income (US-104)",
+          description: "تعديل بيانات مصدر الدخل من القائمة",
+          path: "/income",
         },
       ],
       items: [
@@ -96,6 +101,7 @@ function Home() {
         {
           name: "Monthly Income Summary",
           description: "اختيار الشهر والسنة وعرض إجمالي الدخل",
+          path: "/income",
         },
       ],
       items: [
@@ -146,43 +152,46 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-10">
+    <div className="min-h-screen bg-slate-50 px-6 py-10 dark:bg-slate-900 transition-colors duration-300">
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
-        <div className="mb-10 text-center">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-blue-600">
+        <div className="relative mb-10 text-center">
+          <div className="absolute right-0 top-0">
+            <ThemeToggle />
+          </div>
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             Team Roadmap
           </p>
 
-          <h1 className="text-4xl font-bold text-slate-800">
+          <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
             Money Tracking
           </h1>
 
-          <p className="mx-auto mt-3 max-w-2xl text-slate-500">
+          <p className="mx-auto mt-3 max-w-2xl text-slate-500 dark:text-slate-400">
             خطة الشغل وتقسيم المهام بين الـ 5 Developers
           </p>
         </div>
 
         {/* Project Start */}
         <div className="mb-8 flex justify-center">
-          <div className="rounded-2xl border border-slate-200 bg-white px-8 py-5 text-center shadow-sm">
-            <div className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+          <div className="rounded-2xl border border-slate-200 bg-white px-8 py-5 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <div className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
               PROJECT START
             </div>
 
-            <div className="mt-2 text-2xl font-bold text-slate-800">
+            <div className="mt-2 text-2xl font-bold text-slate-800 dark:text-white">
               Money Tracking
             </div>
 
-            <div className="mt-1 text-sm text-slate-500">
+            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Frontend Development Team
             </div>
           </div>
         </div>
 
         {/* Connector */}
-        <div className="mx-auto mb-8 h-8 w-1 bg-slate-300"></div>
+        <div className="mx-auto mb-8 h-8 w-1 bg-slate-300 dark:bg-slate-700"></div>
 
         {/* Developers */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -193,11 +202,11 @@ function Home() {
             return (
               <div
                 key={developer.number}
-                className={`relative overflow-hidden rounded-2xl border ${colors.border} bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg`}
+                className={`relative overflow-hidden rounded-2xl border ${colors.border} bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800`}
               >
 
                 {/* Developer Header */}
-                <div className={`p-5 ${colors.bg}`}>
+                <div className={`p-5 ${colors.bg} dark:bg-slate-700/50`}>
                   <div className="flex items-center gap-4">
 
                     <div
@@ -207,11 +216,11 @@ function Home() {
                     </div>
 
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                         Developer {developer.number}
                       </p>
 
-                      <h2 className="text-xl font-bold text-slate-800">
+                      <h2 className="text-xl font-bold text-slate-800 dark:text-white">
                         {developer.title}
                       </h2>
                     </div>
@@ -228,28 +237,49 @@ function Home() {
                 </div>
 
                 {/* Pages */}
-                <div className="border-b border-slate-100 p-5">
+                <div className="border-b border-slate-100 p-5 dark:border-slate-700">
 
-                  <p className="mb-3 text-sm font-bold text-slate-700">
+                  <p className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-300">
                     📄 Pages
                   </p>
 
                   <div className="space-y-3">
 
-                    {developer.pages.map((page) => (
-                      <div
-                        key={page.name}
-                        className="rounded-lg bg-slate-50 p-3"
-                      >
-                        <p className="text-sm font-semibold text-slate-800">
-                          {page.name}
-                        </p>
+                    {developer.pages.map((page) =>
+                      page.path ? (
+                        <Link
+                          key={page.name}
+                          to={page.path}
+                          className="group block rounded-lg bg-slate-50 p-3 transition hover:bg-emerald-50/70 hover:border hover:border-emerald-200 dark:bg-slate-700/50 dark:hover:bg-emerald-900/30"
+                        >
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 dark:text-slate-200 dark:group-hover:text-emerald-400">
+                              {page.name}
+                            </p>
+                            <span className="text-xs font-semibold text-emerald-600 opacity-0 group-hover:opacity-100 transition dark:text-emerald-400">
+                              فتح ↗
+                            </span>
+                          </div>
 
-                        <p className="mt-1 text-xs leading-5 text-slate-500">
-                          {page.description}
-                        </p>
-                      </div>
-                    ))}
+                          <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                            {page.description}
+                          </p>
+                        </Link>
+                      ) : (
+                        <div
+                          key={page.name}
+                          className="rounded-lg bg-slate-50 p-3 dark:bg-slate-700/50"
+                        >
+                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {page.name}
+                          </p>
+
+                          <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                            {page.description}
+                          </p>
+                        </div>
+                      )
+                    )}
 
                   </div>
                 </div>
@@ -257,7 +287,7 @@ function Home() {
                 {/* Responsibilities */}
                 <div className="p-5">
 
-                  <p className="mb-3 text-sm font-bold text-slate-700">
+                  <p className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-300">
                     🔧 Responsibilities
                   </p>
 
@@ -266,7 +296,7 @@ function Home() {
                     {developer.items.map((item) => (
                       <li
                         key={item}
-                        className="flex items-center gap-3 text-sm text-slate-600"
+                        className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400"
                       >
                         <span
                           className={`h-2 w-2 shrink-0 rounded-full ${colors.number}`}
@@ -287,13 +317,13 @@ function Home() {
         </div>
 
         {/* Development Flow */}
-        <div className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
 
-          <h2 className="text-center text-lg font-bold text-slate-800">
+          <h2 className="text-center text-lg font-bold text-slate-800 dark:text-white">
             Development Flow
           </h2>
 
-          <p className="mt-2 text-center text-sm text-slate-500">
+          <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
             ترتيب الشغل بشكل مبسط
           </p>
 
@@ -337,9 +367,9 @@ function Home() {
         </div>
 
         {/* Team Note */}
-        <div className="mt-8 rounded-xl border border-blue-100 bg-blue-50 p-4 text-center">
+        <div className="mt-8 rounded-xl border border-blue-100 bg-blue-50 p-4 text-center dark:border-blue-900 dark:bg-blue-950/40">
 
-          <p className="text-sm text-blue-700">
+          <p className="text-sm text-blue-700 dark:text-blue-300">
             💡 كل Developer يشتغل على الجزء بتاعه بشكل مستقل،
             وبعد ما نخلص نعمل Integration بين الأجزاء.
           </p>
@@ -347,7 +377,7 @@ function Home() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-sm text-slate-400">
+        <div className="mt-8 text-center text-sm text-slate-400 dark:text-slate-600">
           5 Developers • Frontend Team • Money Tracking
         </div>
 
