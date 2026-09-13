@@ -31,10 +31,12 @@ function Home() {
         {
           name: "Forgot Password",
           description: "المستخدم يطلب لينك لتغيير الباسورد",
+          path: "/forgot-password",
         },
         {
           name: "Reset Password",
           description: "تغيير الباسورد من خلال اللينك",
+          path: "/reset-password",
         },
       ],
       items: [
