@@ -81,6 +81,7 @@ function Home() {
         {
           name: "Income Page",
           description: "عرض مصادر الدخل وإدارتها",
+          path: "/income/list",
         },
       ],
       items: [
@@ -152,7 +153,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-10 dark:bg-slate-900 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 px-6 py-10 transition-colors duration-300 dark:bg-slate-900">
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
@@ -160,6 +161,7 @@ function Home() {
           <div className="absolute right-0 top-0">
             <ThemeToggle />
           </div>
+
           <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             Team Roadmap
           </p>
@@ -191,11 +193,10 @@ function Home() {
         </div>
 
         {/* Connector */}
-        <div className="mx-auto mb-8 h-8 w-1 bg-slate-300 dark:bg-slate-700"></div>
+        <div className="mx-auto mb-8 h-8 w-1 bg-slate-300 dark:bg-slate-700" />
 
         {/* Developers */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-
           {developers.map((developer) => {
             const colors = colorClasses[developer.color];
 
@@ -204,11 +205,11 @@ function Home() {
                 key={developer.number}
                 className={`relative overflow-hidden rounded-2xl border ${colors.border} bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800`}
               >
-
                 {/* Developer Header */}
-                <div className={`p-5 ${colors.bg} dark:bg-slate-700/50`}>
+                <div
+                  className={`p-5 ${colors.bg} dark:bg-slate-700/50`}
+                >
                   <div className="flex items-center gap-4">
-
                     <div
                       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-lg font-bold text-white ${colors.number}`}
                     >
@@ -224,7 +225,6 @@ function Home() {
                         {developer.title}
                       </h2>
                     </div>
-
                   </div>
 
                   <div className="mt-4">
@@ -238,25 +238,24 @@ function Home() {
 
                 {/* Pages */}
                 <div className="border-b border-slate-100 p-5 dark:border-slate-700">
-
                   <p className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-300">
                     📄 Pages
                   </p>
 
                   <div className="space-y-3">
-
                     {developer.pages.map((page) =>
                       page.path ? (
                         <Link
                           key={page.name}
                           to={page.path}
-                          className="group block rounded-lg bg-slate-50 p-3 transition hover:bg-emerald-50/70 hover:border hover:border-emerald-200 dark:bg-slate-700/50 dark:hover:bg-emerald-900/30"
+                          className="group block rounded-lg bg-slate-50 p-3 transition hover:border hover:border-emerald-200 hover:bg-emerald-50/70 dark:bg-slate-700/50 dark:hover:bg-emerald-900/30"
                         >
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 dark:text-slate-200 dark:group-hover:text-emerald-400">
                               {page.name}
                             </p>
-                            <span className="text-xs font-semibold text-emerald-600 opacity-0 group-hover:opacity-100 transition dark:text-emerald-400">
+
+                            <span className="text-xs font-semibold text-emerald-600 opacity-0 transition group-hover:opacity-100 dark:text-emerald-400">
                               فتح ↗
                             </span>
                           </div>
@@ -280,19 +279,16 @@ function Home() {
                         </div>
                       )
                     )}
-
                   </div>
                 </div>
 
                 {/* Responsibilities */}
                 <div className="p-5">
-
                   <p className="mb-3 text-sm font-bold text-slate-700 dark:text-slate-300">
                     🔧 Responsibilities
                   </p>
 
                   <ul className="space-y-3">
-
                     {developer.items.map((item) => (
                       <li
                         key={item}
@@ -300,25 +296,20 @@ function Home() {
                       >
                         <span
                           className={`h-2 w-2 shrink-0 rounded-full ${colors.number}`}
-                        ></span>
+                        />
 
                         {item}
                       </li>
                     ))}
-
                   </ul>
-
                 </div>
-
               </div>
             );
           })}
-
         </div>
 
         {/* Development Flow */}
         <div className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-
           <h2 className="text-center text-lg font-bold text-slate-800 dark:text-white">
             Development Flow
           </h2>
@@ -328,7 +319,6 @@ function Home() {
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
-
             <span className="rounded-lg bg-blue-100 px-4 py-2 font-semibold text-blue-700">
               Login
             </span>
@@ -362,25 +352,21 @@ function Home() {
             <span className="rounded-lg bg-slate-100 px-4 py-2 font-semibold text-slate-700">
               Final Integration
             </span>
-
           </div>
         </div>
 
         {/* Team Note */}
         <div className="mt-8 rounded-xl border border-blue-100 bg-blue-50 p-4 text-center dark:border-blue-900 dark:bg-blue-950/40">
-
           <p className="text-sm text-blue-700 dark:text-blue-300">
             💡 كل Developer يشتغل على الجزء بتاعه بشكل مستقل،
             وبعد ما نخلص نعمل Integration بين الأجزاء.
           </p>
-
         </div>
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-slate-400 dark:text-slate-600">
           5 Developers • Frontend Team • Money Tracking
         </div>
-
       </div>
     </div>
   );
