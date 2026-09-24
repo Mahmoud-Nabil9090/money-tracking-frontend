@@ -6,6 +6,10 @@ import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import IncomeSummary from "./pages/Income/IncomeSummary";
 import NewIncomePage from "./pages/Income/IncomeForm";
 import EditIncomePage from "./pages/Income/EditIncome";
+import Accounts from "./pages/Accounts/Accounts";
+import AccountDetails from "./pages/Accounts/AccountDetails";
+
+
 
 function SuccessToast() {
   const location = useLocation();
@@ -46,6 +50,8 @@ function App() {
         <Route path="/income" element={<IncomeSummary />} />
         <Route path="/income/new" element={<NewIncomePage />} />
         <Route path="/income/:id/edit" element={<EditIncomePage />} />
+        <Route path="/accounts" element={<Accounts />} />
+        <Route path="/accounts/:id" element={<AccountDetails />} />
       </Routes>
     </BrowserRouter>
   );
