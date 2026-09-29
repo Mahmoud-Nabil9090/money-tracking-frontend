@@ -1,3 +1,4 @@
+﻿
 import { useEffect } from "react";
 import {
   BrowserRouter,
@@ -8,13 +9,19 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/Home";
+
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import IncomeSummary from "./pages/Income/IncomeSummary";
+import IncomeList from "./pages/Income/IncomeList";
 import NewIncomePage from "./pages/Income/IncomeForm";
 import EditIncomePage from "./pages/Income/EditIncome";
-import IncomeList from "./pages/Income/IncomeList";
 import Categories from "./pages/Expenses/Categories";
+
+import Expenses from "./pages/Expenses/Expenses";
+
+import Accounts from "./pages/Accounts/Accounts";
+import AccountDetails from "./pages/Accounts/AccountDetails";
 
 function SuccessToast() {
   const location = useLocation();
@@ -63,8 +70,10 @@ export default function App() {
         <Route path="/income/new" element={<NewIncomePage />} />
         <Route path="/income/:id/edit" element={<EditIncomePage />} />
         <Route path="/expenses/categories" element={<Categories />} />
+        <Route path="/expenses" element={<Expenses />} />
+        <Route path="/accounts" element={<Accounts />} />
+        <Route path="/accounts/:id" element={<AccountDetails />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
