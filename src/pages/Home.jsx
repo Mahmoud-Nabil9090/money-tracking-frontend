@@ -191,6 +191,39 @@ function Home() {
             <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Frontend Development Team
             </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-slate-100 pt-3 dark:border-slate-700/60">
+              <Link
+                to="/expenses"
+                className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-100 dark:bg-red-950/50 dark:text-red-300"
+              >
+                💸 المصاريف (Expenses)
+              </Link>
+              <Link
+                to="/expenses/new"
+                className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700"
+              >
+                + تسجيل مصروف (Dev 1)
+              </Link>
+              <Link
+                to="/income"
+                className="rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300"
+              >
+                💰 الدخل (Income)
+              </Link>
+              <Link
+                to="/accounts"
+                className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:bg-blue-100 dark:bg-blue-950/50 dark:text-blue-300"
+              >
+                🏦 الحسابات (Accounts)
+              </Link>
+              <Link
+                to="/accounts/new"
+                className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-blue-700"
+              >
+                + إضافة حساب (Dev 4)
+              </Link>
+            </div>
           </div>
         </div>
 

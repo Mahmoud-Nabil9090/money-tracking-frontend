@@ -1,4 +1,4 @@
-﻿
+
 import { useEffect } from "react";
 import {
   BrowserRouter,
@@ -17,10 +17,11 @@ import IncomeList from "./pages/Income/IncomeList";
 import NewIncomePage from "./pages/Income/IncomeForm";
 import EditIncomePage from "./pages/Income/EditIncome";
 import Categories from "./pages/Expenses/Categories";
-
 import Expenses from "./pages/Expenses/Expenses";
+import ExpenseForm from "./pages/Expenses/ExpenseForm";
 
 import Accounts from "./pages/Accounts/Accounts";
+import AccountFormPage from "./pages/Accounts/AccountForm";
 import AccountDetails from "./pages/Accounts/AccountDetails";
 
 function SuccessToast() {
@@ -71,7 +72,12 @@ export default function App() {
         <Route path="/income/:id/edit" element={<EditIncomePage />} />
         <Route path="/expenses/categories" element={<Categories />} />
         <Route path="/expenses" element={<Expenses />} />
+        <Route path="/expenses/new" element={<ExpenseForm />} />
+        <Route path="/expenses/:id/edit" element={<ExpenseForm />} />
+        <Route path="/expenses/edit/:id" element={<ExpenseForm />} />
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/accounts/new" element={<AccountFormPage />} />
+        <Route path="/accounts/:id/edit" element={<AccountFormPage />} />
         <Route path="/accounts/:id" element={<AccountDetails />} />
       </Routes>
     </BrowserRouter>

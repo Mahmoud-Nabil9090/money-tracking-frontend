@@ -1,25 +1,33 @@
-function TotalWealthCard({ totalWealth, currency }) {
+function TotalWealthCard({ totalWealth = 0, currency = "EGP" }) {
+  const isNegative = Number(totalWealth) < 0;
+
   return (
-    <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
-      <p className="mb-2 text-sm font-medium text-gray-500">
-        Total Wealth
+    <div className="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm transition dark:border-slate-800 dark:bg-slate-900">
+      <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+        إجمالي الثروة (Total Wealth)
       </p>
 
-      <div className="flex items-baseline gap-2">
+      <div className="flex items-center justify-center gap-2">
         <h2
-          className={`text-3xl font-bold ${
-            totalWealth < 0 ? "text-red-500" : "text-gray-900"
+          className={`text-4xl font-extrabold tracking-tight sm:text-5xl ${
+            isNegative
+              ? "text-red-600 dark:text-red-400"
+              : "text-slate-900 dark:text-white"
           }`}
         >
-          {totalWealth.toLocaleString()}
+          {Number(totalWealth).toLocaleString()}
         </h2>
 
         {currency && (
-          <span className="text-sm font-medium text-gray-500">
+          <span className="text-base font-semibold text-slate-500 dark:text-slate-400 sm:text-lg">
             {currency}
           </span>
         )}
       </div>
+
+      <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+        مجموع أرصدة جميع الحسابات البنكية والمحافظ والنقدية
+      </p>
     </div>
   );
 }

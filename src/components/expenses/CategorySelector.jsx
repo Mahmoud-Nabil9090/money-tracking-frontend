@@ -1,30 +1,33 @@
 import { useEffect, useState } from "react";
 import { getExpenseCategories } from "../../services/expenseCategoryService";
+import { mergeWithDefaultCategories, getCategoryType, expenseTypes } from "./expenseTypes";
 
-// قائمة اختيار التصنيف؛ يمكن تمرير التصنيفات من مكوّن آخر أو جلبها هنا.
+const typeLabels = Object.fromEntries(
+  expenseTypes.map((type) => [type.value, type.label])
+);
+
+// قائمة اختيار التصنيف (CategorySelector) - US-202
 export default function CategorySelector({
   value,
   onChange,
   categories: providedCategories,
   reloadKey = 0,
 }) {
-  // يحتفظ بالتصنيفات التي تم جلبها من الخادم عند عدم تمرير قائمة جاهزة.
   const [fetchedCategories, setFetchedCategories] = useState([]);
   const [loading, setLoading] = useState(!providedCategories);
   const [error, setError] = useState("");
 
-  // يجلب التصنيفات عند الحاجة، ويعيد الجلب إذا تغيّر مفتاح التحديث.
   useEffect(() => {
     if (providedCategories) {
       return undefined;
     }
 
-    // يمنع تحديث الحالة إذا انتهى المكوّن قبل اكتمال طلب الشبكة.
     let cancelled = false;
     getExpenseCategories()
       .then((items) => {
         if (!cancelled) {
-          setFetchedCategories(items);
+          const list = Array.isArray(items) ? items : items?.data || [];
+          setFetchedCategories(mergeWithDefaultCategories(list));
           setError("");
         }
       })
@@ -46,40 +49,39 @@ export default function CategorySelector({
     };
   }, [providedCategories, reloadKey]);
 
-  // القائمة الممررة لها الأولوية، وإلا نستخدم القائمة التي جلبناها.
-  const categories = providedCategories || fetchedCategories;
+  const rawCategories = providedCategories || fetchedCategories;
+  const categories = mergeWithDefaultCategories(rawCategories);
 
   return (
     <div>
       <label
         htmlFor="expense-category"
-        className="mb-2 block text-sm font-semibold text-slate-700"
+        className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"
       >
-        التصنيف
+        التصنيف (Category)
       </label>
-      {/* يعرض القائمة ويعطّلها أثناء التحميل أو عند تعذّر جلب التصنيفات. */}
       <select
         id="expense-category"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         disabled={loading || Boolean(error)}
-        className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100 disabled:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-950/40 dark:disabled:bg-slate-800/50"
       >
         <option value="">
-          {loading ? "جاري تحميل التصنيفات..." : "اختار التصنيف"}
+          {loading ? "جاري تحميل التصنيفات..." : "-- اختار التصنيف --"}
         </option>
-        {/* كل خيار يعرض اسم التصنيف ويستخدم معرّفه كقيمة للاختيار. */}
-        {categories.map((category) => (
-          <option
-            key={category._id || category.id}
-            value={category._id || category.id}
-          >
-            {category.name}
-          </option>
-        ))}
+        {categories.map((category) => {
+          const type = getCategoryType(category);
+          const typeLabel = typeLabels[type] ? ` (${typeLabels[type]})` : "";
+          const id = category._id || category.id;
+          return (
+            <option key={id} value={id}>
+              {category.name}{typeLabel}
+            </option>
+          );
+        })}
       </select>
-      {/* إظهار رسالة الخطأ للمستخدم بدل إخفائها. */}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-red-600 dark:text-red-400">{error}</p>}
     </div>
   );
 }

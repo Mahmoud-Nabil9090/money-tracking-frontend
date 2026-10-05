@@ -1,4 +1,3 @@
-
 function AccountFilters({
   startDate,
   endDate,
@@ -8,39 +7,48 @@ function AccountFilters({
   onClear,
 }) {
   return (
-    <div className="mb-6 rounded-2xl bg-white p-5 shadow-sm">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition dark:border-slate-800 dark:bg-slate-900">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-white">
+          تصفية الحركات بالتاريخ (Filter Transactions)
+        </h3>
+        {(startDate || endDate) && (
+          <span className="text-xs text-blue-600 dark:text-blue-400">
+            فلتر مفعّل
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         <div>
           <label
             htmlFor="startDate"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-400"
           >
-            From
+            من تاريخ (From)
           </label>
-
           <input
             id="startDate"
             type="date"
             value={startDate}
             onChange={(event) => onStartDateChange(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:ring-blue-950/40"
           />
         </div>
 
         <div>
           <label
             htmlFor="endDate"
-            className="mb-2 block text-sm font-medium text-gray-700"
+            className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-400"
           >
-            To
+            إلى تاريخ (To)
           </label>
-
           <input
             id="endDate"
             type="date"
             value={endDate}
             onChange={(event) => onEndDateChange(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:ring-blue-950/40"
           />
         </div>
 
@@ -48,17 +56,17 @@ function AccountFilters({
           <button
             type="button"
             onClick={onApply}
-            className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+            className="flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
           >
-            Apply
+            تطبيق الفلتر
           </button>
 
           <button
             type="button"
             onClick={onClear}
-            className="rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
-            Clear
+            إلغاء
           </button>
         </div>
       </div>
@@ -67,4 +75,3 @@ function AccountFilters({
 }
 
 export default AccountFilters;
-

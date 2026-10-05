@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatDateForInput } from "../../utiles/data";
+import { getAccounts } from "../../services/accountService";
 
 const TYPE_OPTIONS = [
   {
@@ -114,15 +115,44 @@ function IncomeForm({
     recurrence: initialData?.recurrence || "once",
 
     notes: initialData?.notes || "",
+
+    accountId:
+      initialData?.account?._id ||
+      initialData?.account ||
+      initialData?.accountId ||
+      "",
   }));
 
+  const [accounts, setAccounts] = useState([]);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
+  useEffect(() => {
+    let cancelled = false;
+    getAccounts()
+      .then((res) => {
+        if (cancelled) return;
+        const list = Array.isArray(res) ? res : res?.data || [];
+        setAccounts(list);
+      })
+      .catch((err) => console.error("Error loading accounts in IncomeForm:", err));
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const isEdit = mode === "edit";
 
   const validate = (data = formData) => {
     const validationErrors = {};
+
+    if (data.accountId) {
+      const selectedAcc = accounts.find((a) => (a._id || a.id) === data.accountId);
+      if (selectedAcc && selectedAcc.isActive === false) {
+        validationErrors.accountId = "لا يمكن اختيار حساب مؤرشف (هذا الحساب معطل ومؤرشف).";
+      }
+    }
 
     if (!data.name || !data.name.trim()) {
       validationErrors.name =
@@ -247,6 +277,8 @@ function IncomeForm({
         : "",
       recurrence: formData.recurrence,
       status: initialData?.status || "cleared",
+      accountId: formData.accountId || null,
+      account: formData.accountId || null,
     };
 
     onSubmit?.(payload);
@@ -587,6 +619,64 @@ function IncomeForm({
                   </p>
                 )}
             </div>
+          </div>
+
+          {/* Account to Deposit (US-306 prevent archived accounts) */}
+          <div>
+            <label
+              htmlFor="income-account"
+              className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300"
+            >
+              Deposit Account{" "}
+              <span className="mr-2 text-xs font-normal text-slate-400">
+                (الحساب البنكي / المحفظة للإيداع - اختياري)
+              </span>
+            </label>
+
+            <select
+              id="income-account"
+              value={formData.accountId}
+              onChange={(event) =>
+                handleChange("accountId", event.target.value)
+              }
+              onBlur={() => handleBlur("accountId")}
+              className={`w-full rounded-xl border bg-slate-50/50 px-4 py-3 text-sm font-medium text-slate-800 outline-none transition-all focus:bg-white focus:ring-4 dark:bg-slate-800/80 dark:text-slate-100 ${
+                errors.accountId && touched.accountId
+                  ? "border-rose-400 focus:border-rose-500 focus:ring-rose-500/10 dark:border-rose-700"
+                  : "border-slate-300/80 focus:border-emerald-500 focus:ring-emerald-500/10 dark:border-slate-700"
+              }`}
+            >
+              <option value="">-- اختياري: بدون إيداع بحساب محدد --</option>
+              {accounts
+                .filter(
+                  (acc) =>
+                    acc.isActive !== false ||
+                    (isEdit && (acc._id || acc.id) === formData.accountId)
+                )
+                .map((acc) => {
+                  const isArchived = acc.isActive === false;
+                  return (
+                    <option
+                      key={acc._id}
+                      value={acc._id}
+                      disabled={isArchived}
+                    >
+                      {acc.name} ({Number(acc.balance || 0).toLocaleString()}{" "}
+                      {acc.currency || "EGP"})
+                      {isArchived ? " [مؤرشف - معطل]" : ""}
+                    </option>
+                  );
+                })}
+            </select>
+
+            {errors.accountId && touched.accountId && (
+              <p className="mt-1.5 text-xs font-medium text-rose-600 dark:text-rose-400">
+                ⚠️ {errors.accountId}
+              </p>
+            )}
+            <p className="mt-1 text-xs text-slate-400">
+              الحسابات النشطة فقط هي المتاحة للإيداع. الحسابات المؤرشفة محجوبة تلقائياً.
+            </p>
           </div>
 
           {/* Recurrence — US-102 */}
