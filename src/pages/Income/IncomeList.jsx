@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import ThemeToggle from "../../components/ThemeToggle";
 import IncomeCard from "../../components/ui/IncomeCard";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 
@@ -129,123 +129,203 @@ export default function IncomeList() {
   }
 
   return (
-    <section className="p-6">
-      {/* Header */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Income
-          </h1>
+    <main
+      className="min-h-screen px-4 py-8 transition-colors duration-200 sm:px-6 lg:px-8"
+      style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
+      dir="rtl"
+    >
+      <div className="mx-auto max-w-7xl space-y-6">
+        {/* Navigation & Header */}
+        <div className="flex items-center justify-between">
+          <nav className="flex items-center gap-2 text-xs font-medium" style={{ color: "var(--text-tertiary)" }}>
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1.5 rounded-lg px-2 py-1 transition"
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--text-tertiary)"; }}
+            >
+              <span>لوحة التحكم</span>
+            </Link>
+            <span style={{ color: "var(--border-primary)" }}>/</span>
+            <span
+              className="rounded-lg px-2 py-1 font-semibold"
+              style={{ backgroundColor: "var(--brand-primary-light)", color: "var(--brand-primary)" }}
+            >
+              قائمة مصادر الدخل
+            </span>
+          </nav>
 
-          <p className="mt-1 text-sm text-gray-500">
-            Manage your income sources
-          </p>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={reloadIncomes}
+              disabled={loading}
+              className="rounded-xl border px-3 py-1.5 text-xs font-semibold transition disabled:opacity-50"
+              style={{
+                borderColor: "var(--border-primary)",
+                backgroundColor: "var(--bg-card)",
+                color: "var(--text-secondary)",
+              }}
+            >
+              تحديث ⟳
+            </button>
+          </div>
         </div>
 
-        {/* Total */}
-        <div className="rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
-          <p className="text-xs text-gray-500">
-            Total Income
-          </p>
-
-          <p className="text-xl font-bold text-gray-900">
-            {total.toLocaleString()}
-          </p>
-        </div>
-      </div>
-
-      {/* Delete success */}
-      {successMessage && (
-        <p
-          role="status"
-          className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700"
-        >
-          {successMessage}
-        </p>
-      )}
-
-      {/* Loading */}
-      {loading && (
-        <div
-          role="status"
-          className="rounded-xl border border-gray-200 bg-white p-6 text-gray-500"
-        >
-          Loading income...
-        </div>
-      )}
-
-      {/* Error */}
-      {!loading && error && (
-        <div
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 p-4"
-        >
-          <p className="text-sm text-red-700">
-            {error}
-          </p>
-
-          <button
-            type="button"
-            onClick={reloadIncomes}
-            className="mt-3 rounded-lg border border-red-300 px-3 py-2 text-sm font-medium text-red-700"
-          >
-            Retry
-          </button>
-        </div>
-      )}
-
-      {/* Empty state */}
-      {!loading && !error && incomes.length === 0 && (
-        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-          <p className="text-gray-500">
-            No income records yet.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => navigate("/income/new")}
-            className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white"
-          >
-            Add Income
-          </button>
-        </div>
-      )}
-
-      {/* Income List */}
-      {!loading && !error && incomes.length > 0 && (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {incomes.map((income) => (
-            <IncomeCard
-              key={income._id}
-              income={income}
-              onEdit={handleEdit}
-              onDelete={handleDeleteClick}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Delete confirmation */}
-      <ConfirmDialog
-        open={Boolean(selectedIncome)}
-        busy={deleting}
-        error={deleteError}
-        onCancel={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-      >
-        <p>
-          هل أنت متأكد من حذف{" "}
-          <strong>{selectedIncome?.name}</strong>؟
-        </p>
-
-        {selectedIncome?.recurrence &&
-          selectedIncome.recurrence !== "once" && (
-            <p className="mt-2 text-red-600">
-              سيتم حذف مصدر الدخل المتكرر بالكامل ولن تظهر
-              له فترات مستقبلية.
+        {/* Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "var(--text-heading)" }}>
+              مصادر الدخل
+            </h1>
+            <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+              إدارة جميع مصادر الدخل الخاصة بك
             </p>
-          )}
-      </ConfirmDialog>
-    </section>
+          </div>
+
+          {/* Total */}
+          <div
+            className="rounded-xl border px-5 py-3"
+            style={{
+              borderColor: "var(--border-primary)",
+              backgroundColor: "var(--bg-card)",
+              boxShadow: "var(--shadow-card)",
+            }}
+          >
+            <p className="text-xs font-bold" style={{ color: "var(--text-tertiary)" }}>
+              إجمالي الدخل
+            </p>
+            <p className="text-xl font-extrabold font-mono" style={{ color: "var(--brand-primary)" }}>
+              {total.toLocaleString("ar-EG")} <span className="text-xs font-bold" style={{ color: "var(--text-tertiary)" }}>EGP</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Add button */}
+        <div>
+          <Link
+            to="/income/new"
+            className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:shadow-md active:scale-95"
+            style={{ backgroundColor: "var(--brand-primary)" }}
+          >
+            ➕ إضافة مصدر دخل جديد
+          </Link>
+        </div>
+
+        {/* Delete success */}
+        {successMessage && (
+          <div
+            className="rounded-xl border p-3 text-sm font-semibold"
+            style={{
+              backgroundColor: "var(--status-success-bg)",
+              borderColor: "var(--status-success-border)",
+              color: "var(--status-success)",
+            }}
+          >
+            ✓ {successMessage}
+          </div>
+        )}
+
+        {/* Loading */}
+        {loading && (
+          <div className="py-16 text-center">
+            <div
+              className="mx-auto mb-3 h-10 w-10 animate-spin rounded-full border-4"
+              style={{
+                borderColor: "var(--border-primary)",
+                borderTopColor: "var(--brand-primary)",
+              }}
+            />
+            <p className="text-sm font-medium" style={{ color: "var(--text-tertiary)" }}>
+              جاري تحميل قائمة الدخل...
+            </p>
+          </div>
+        )}
+
+        {/* Error */}
+        {!loading && error && (
+          <div
+            className="rounded-xl border p-5"
+            style={{
+              backgroundColor: "var(--status-danger-bg)",
+              borderColor: "var(--status-danger-border)",
+            }}
+          >
+            <p className="text-sm font-semibold" style={{ color: "var(--status-danger)" }}>
+              ⚠️ {error}
+            </p>
+            <button
+              type="button"
+              onClick={reloadIncomes}
+              className="mt-3 rounded-lg px-4 py-2 text-xs font-bold text-white"
+              style={{ backgroundColor: "var(--status-danger)" }}
+            >
+              إعادة المحاولة
+            </button>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!loading && !error && incomes.length === 0 && (
+          <div
+            className="rounded-2xl border p-12 text-center"
+            style={{
+              backgroundColor: "var(--bg-card)",
+              borderColor: "var(--border-primary)",
+            }}
+          >
+            <p className="text-3xl mb-3">💰</p>
+            <p className="font-semibold" style={{ color: "var(--text-secondary)" }}>
+              لا توجد مصادر دخل مسجلة بعد
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate("/income/new")}
+              className="mt-4 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition"
+              style={{ backgroundColor: "var(--brand-primary)" }}
+            >
+              إضافة مصدر دخل
+            </button>
+          </div>
+        )}
+
+        {/* Income List */}
+        {!loading && !error && incomes.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {incomes.map((income) => (
+              <IncomeCard
+                key={income._id}
+                income={income}
+                onEdit={handleEdit}
+                onDelete={handleDeleteClick}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Delete confirmation */}
+        <ConfirmDialog
+          open={Boolean(selectedIncome)}
+          busy={deleting}
+          error={deleteError}
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        >
+          <p>
+            هل أنت متأكد من حذف{" "}
+            <strong>{selectedIncome?.name}</strong>؟
+          </p>
+
+          {selectedIncome?.recurrence &&
+            selectedIncome.recurrence !== "once" && (
+              <p className="mt-2" style={{ color: "var(--status-danger)" }}>
+                سيتم حذف مصدر الدخل المتكرر بالكامل ولن تظهر
+                له فترات مستقبلية.
+              </p>
+            )}
+        </ConfirmDialog>
+      </div>
+    </main>
   );
 }

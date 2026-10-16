@@ -8,7 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import Home from "./pages/Home";
+
 
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
@@ -23,6 +23,10 @@ import ExpenseForm from "./pages/Expenses/ExpenseForm";
 import Accounts from "./pages/Accounts/Accounts";
 import AccountFormPage from "./pages/Accounts/AccountForm";
 import AccountDetails from "./pages/Accounts/AccountDetails";
+
+import Login from "./pages/Login/Login";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Register from "./pages/Register/Register";
 
 function SuccessToast() {
   const location = useLocation();
@@ -62,10 +66,15 @@ export default function App() {
     <BrowserRouter>
       <SuccessToast />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+
         <Route path="/income" element={<IncomeSummary />} />
         <Route path="/income/list" element={<IncomeList />} />
         <Route path="/income/new" element={<NewIncomePage />} />
@@ -79,6 +88,7 @@ export default function App() {
         <Route path="/accounts/new" element={<AccountFormPage />} />
         <Route path="/accounts/:id/edit" element={<AccountFormPage />} />
         <Route path="/accounts/:id" element={<AccountDetails />} />
+        
       </Routes>
     </BrowserRouter>
   );

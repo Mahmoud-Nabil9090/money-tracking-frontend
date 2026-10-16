@@ -1,180 +1,142 @@
-
-
-
 function IncomeSummaryTable({ items, currency }) {
   return (
-    
-<div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-lg">
+    <div
+      className="overflow-hidden rounded-2xl border transition-all duration-200"
+      style={{
+        backgroundColor: "var(--bg-card)",
+        borderColor: "var(--border-primary)",
+        boxShadow: "var(--shadow-card)",
+      }}
+    >
+      {/* Table Header */}
+      <div className="flex items-center gap-3 border-b px-6 py-5" style={{ borderColor: "var(--border-primary)" }}>
+        <div
+          className="flex h-11 w-11 items-center justify-center rounded-xl text-lg"
+          style={{ backgroundColor: "var(--brand-primary-light)", color: "var(--brand-primary)" }}
+        >
+          💵
+        </div>
+        <div>
+          <h3 className="text-base font-bold" style={{ color: "var(--text-heading)" }}>
+            تفاصيل الدخل
+          </h3>
+          <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+            مصادر الدخل للشهر المحدد
+          </p>
+        </div>
+      </div>
 
-  {/* Table Header */}
-  <div className="flex items-center gap-3 border-b border-gray-100 px-6 py-5">
-    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M15 7.5V6.5A2.5 2.5 0 0012.5 4h-1A2.5 2.5 0 009 6.5v.5m6 10v.5a2.5 2.5 0 01-2.5 2.5h-1A2.5 2.5 0 019 17.5V17"
-        />
-      </svg>
-    </div>
-
-    <div>
-      <h3 className="text-base font-semibold text-gray-800">
-        Income Details
-      </h3>
-
-      <p className="text-xs text-gray-400">
-        Income sources for the selected month
-      </p>
-    </div>
-  </div>
-
-  <div className="overflow-x-auto">
-    <table className="w-full">
-
-      {/* Table Head */}
-      <thead>
-        <tr className="bg-gray-50/80">
-          <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Income Source
-          </th>
-
-          <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Amount
-          </th>
-        </tr>
-      </thead>
-
-      {/* Table Body */}
-      <tbody className="divide-y divide-gray-100">
-
-        {items.length === 0 ? (
-          <tr>
-            <td
-              colSpan="2"
-              className="px-6 py-12 text-center"
-            >
-              <div className="flex flex-col items-center justify-center">
-
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"
-                    />
-                  </svg>
-                </div>
-
-                <p className="text-sm font-medium text-gray-600">
-                  No income found
-                </p>
-
-                <p className="mt-1 text-xs text-gray-400">
-                  There is no income recorded for this month.
-                </p>
-
-              </div>
-            </td>
-          </tr>
-        ) : (
-          items.map((item) => (
-            <tr
-              key={item._id}
-              className="group transition-colors duration-200 hover:bg-green-50/40"
-            >
-
-              {/* Source */}
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-sm font-semibold text-green-600 transition-colors group-hover:bg-green-100">
-                    {item.name?.charAt(0)?.toUpperCase()}
-                  </div>
-
-                  <span className="font-medium text-gray-700">
-                    {item.name}
-                  </span>
-
-                </div>
-              </td>
-
-              {/* Amount */}
-              <td className="px-6 py-4 text-right">
-                <span className="font-semibold text-gray-800">
-                  {Number(item.amount).toLocaleString()}
-                </span>
-
-                <span className="ml-1 text-sm font-medium text-green-600">
-                  {currency}
-                </span>
-              </td>
-
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          {/* Table Head */}
+          <thead>
+            <tr style={{ backgroundColor: "var(--bg-tertiary)" }}>
+              <th
+                className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider"
+                style={{ color: "var(--text-tertiary)" }}
+              >
+                مصدر الدخل
+              </th>
+              <th
+                className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider"
+                style={{ color: "var(--text-tertiary)" }}
+              >
+                المبلغ
+              </th>
             </tr>
-          ))
-        )}
+          </thead>
 
-      </tbody>
+          {/* Table Body */}
+          <tbody>
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan="2" className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <p className="text-3xl mb-3">📭</p>
+                    <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>
+                      لا توجد إيرادات مسجلة
+                    </p>
+                    <p className="mt-1 text-xs" style={{ color: "var(--text-tertiary)" }}>
+                      لا يوجد دخل مسجل لهذا الشهر
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              items.map((item) => (
+                <tr
+                  key={item._id}
+                  className="group transition-colors duration-150"
+                  style={{ borderBottom: "1px solid var(--border-secondary)" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--bg-hover)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+                >
+                  {/* Source */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold transition-colors"
+                        style={{
+                          backgroundColor: "var(--brand-primary-light)",
+                          color: "var(--brand-primary)",
+                        }}
+                      >
+                        {item.name?.charAt(0)?.toUpperCase()}
+                      </div>
+                      <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                        {item.name}
+                      </span>
+                    </div>
+                  </td>
 
-      {/* Total */}
-      {items.length > 0 && (
-        <tfoot>
-          <tr className="border-t-2 border-green-100 bg-green-50/60">
+                  {/* Amount */}
+                  <td className="px-6 py-4 text-left">
+                    <span className="font-bold font-mono" style={{ color: "var(--text-heading)" }}>
+                      {Number(item.amount).toLocaleString("ar-EG")}
+                    </span>
+                    <span className="mr-1 text-sm font-semibold" style={{ color: "var(--brand-primary)" }}>
+                      {currency}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
 
-            <td className="px-6 py-5">
-              <div className="flex items-center gap-2">
+          {/* Total */}
+          {items.length > 0 && (
+            <tfoot>
+              <tr style={{ borderTop: "2px solid var(--brand-primary)", backgroundColor: "var(--brand-primary-light)" }}>
+                <td className="px-6 py-5">
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "var(--brand-primary)" }} />
+                    <span className="font-bold" style={{ color: "var(--text-heading)" }}>
+                      إجمالي الدخل
+                    </span>
+                  </div>
+                </td>
+                <td className="px-6 py-5 text-left">
+                  <span className="text-lg font-extrabold font-mono" style={{ color: "var(--brand-primary)" }}>
+                    {Number(
+                      items.reduce(
+                        (sum, item) => sum + Number(item.amount),
+                        0
+                      )
+                    ).toLocaleString("ar-EG")}
+                  </span>
+                  <span className="mr-1 text-sm font-bold" style={{ color: "var(--brand-primary)" }}>
+                    {currency}
+                  </span>
+                </td>
+              </tr>
+            </tfoot>
+          )}
+        </table>
+      </div>
 
-                <div className="h-2 w-2 rounded-full bg-green-500" />
-
-                <span className="font-bold text-gray-800">
-                  Total Income
-                </span>
-
-              </div>
-            </td>
-
-            <td className="px-6 py-5 text-right">
-              <span className="text-lg font-bold text-green-700">
-                {Number(
-                  items.reduce(
-                    (sum, item) => sum + Number(item.amount),
-                    0
-                  )
-                ).toLocaleString()}
-              </span>
-
-              <span className="ml-1 text-sm font-semibold text-green-600">
-                {currency}
-              </span>
-            </td>
-
-          </tr>
-        </tfoot>
-      )}
-
-    </table>
-  </div>
-
-  {/* Bottom Accent */}
-  <div className="h-1 w-full bg-green-500" />
-
-</div>
-
-
+      {/* Bottom Accent */}
+      <div className="h-1 w-full" style={{ backgroundColor: "var(--brand-primary)" }} />
+    </div>
   );
 }
 

@@ -4,18 +4,30 @@ import api from "./api";
  * تسجيل الدخول
  * POST /api/auth/login
  */
-export const loginUser = async (email, password) => {
-  const response = await api.post("/auth/login", { email, password });
+/**
+ * تسجيل الدخول
+ * POST /api/auth/login
+ */
+export const loginUser = async (email, password, rememberMe = false) => {
+  const response = await api.post("/auth/login", {
+    email,
+    password,
+    rememberMe,
+  });
+
   const token = response.data?.data?.token;
+  const user = response.data?.data?.user;
+
   if (token) {
     localStorage.setItem("token", token);
-    if (response.data?.data?.user) {
-      localStorage.setItem("user", JSON.stringify(response.data.data.user));
-    }
   }
+
+  if (user) {
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+
   return response.data;
 };
-
 /**
  * إنشاء حساب جديد
  * POST /api/auth/register
