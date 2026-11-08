@@ -3,7 +3,7 @@
  * Sidebar layout with KPI cards, Cashflow chart, Outflows, Transactions
  * Matches the provided reference design image
  */
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getDashboardData } from "../../services/dashboardService";
@@ -42,10 +42,9 @@ export default function Dashboard() {
   /* ── fetch dashboard ──────────────────────────────────── */
   const fetchDashboard = useCallback(async (params) => {
     try {
-      setLoading(true);
-      setError("");
       const res = await getDashboardData(params);
       setData(res);
+      setError("");
     } catch (err) {
       console.error("Dashboard load error:", err);
       setError(
@@ -60,7 +59,6 @@ export default function Dashboard() {
   /* ── fetch debt summary ─────────────────────── */
   const fetchDebtSummary = useCallback(async () => {
     try {
-      setDebtLoading(true);
       const res = await getDebtSummary();
       setDebtSummary(res);
     } catch (err) {
@@ -71,15 +69,54 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    fetchDashboard(filterParams);
-  }, [filterParams, fetchDashboard]);
+    let cancelled = false;
+    getDashboardData(filterParams)
+      .then((result) => {
+        if (cancelled) return;
+        setData(result);
+        setError("");
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error("Dashboard load error:", err);
+        setError(
+          err.response?.data?.message ||
+            "تعذر تحميل بيانات لوحة التحكم. يرجى المحاولة مرة أخرى."
+        );
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filterParams]);
 
   useEffect(() => {
-    fetchDebtSummary();
-  }, [fetchDebtSummary]);
+    let cancelled = false;
+    getDebtSummary()
+      .then((result) => {
+        if (!cancelled) setDebtSummary(result);
+      })
+      .catch((err) => {
+        if (!cancelled) console.error("Debt summary error:", err);
+      })
+      .finally(() => {
+        if (!cancelled) setDebtLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   /* ── derived values ───────────────────────────────────── */
   const handleLogout = () => { logout(); navigate("/login"); };
+  const handleFilterChange = (params) => {
+    setLoading(true);
+    setFilterParams(params);
+  };
 
   const userName        = user?.name || "المستخدم";
   const accounts        = data?.accounts || [];
@@ -150,7 +187,12 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => { fetchDashboard(filterParams); fetchDebtSummary(); }}
+              onClick={() => {
+                setLoading(true);
+                setDebtLoading(true);
+                fetchDashboard(filterParams);
+                fetchDebtSummary();
+              }}
               disabled={loading}
               className="rounded-lg p-2 text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
               style={{ color: "var(--text-secondary)" }}
@@ -193,7 +235,7 @@ export default function Dashboard() {
             <div className="flex flex-wrap items-center gap-3 animate-fade-in-up stagger-1">
               <DashboardFilter
                 value={filterParams.period}
-                onChange={(params) => setFilterParams(params)}
+                onChange={handleFilterChange}
               />
               <Link
                 to="/expenses/new"
@@ -269,7 +311,7 @@ export default function Dashboard() {
               icon="🏆"
               iconBg="var(--kpi-savings-icon-bg)"
               iconColor="var(--kpi-savings-icon-color)"
-              positive={netBalance >= 0}
+
               delay="stagger-4"
             />
           </section>
@@ -746,7 +788,7 @@ export default function Dashboard() {
 }
 
 /* ── KPI Card Sub-component ── */
-function KPICard({ label, value, currency, subtitle, icon, iconBg, iconColor, link, positive = true, delay = "" }) {
+function KPICard({ label, value, currency, subtitle, icon, iconBg, iconColor, link, delay = "" }) {
   return (
     <div
       className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-200 hover:-translate-y-1 animate-fade-in-up ${delay}`}

@@ -3,6 +3,7 @@ export default function ConfirmDialog({
   title = "هل أنت متأكد؟",
   children,
   busy = false,
+  busyText = "جاري الحذف...",
   error = "",
   confirmText = "حذف",
   cancelText = "إلغاء",
@@ -54,7 +55,7 @@ export default function ConfirmDialog({
             disabled={busy}
             className="rounded-xl bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50"
           >
-            {busy ? "جاري الحذف..." : confirmText}
+            {busy ? busyText : confirmText}
           </button>
         </div>
       </div>

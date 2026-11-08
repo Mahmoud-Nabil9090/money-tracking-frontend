@@ -10,6 +10,7 @@ const MENU_ITEMS = [
       { to: "/income", icon: "💰", label: "الإيرادات" },
       { to: "/expenses", icon: "💸", label: "المصروفات" },
       { to: "/accounts", icon: "🏦", label: "الحسابات" },
+      { to: "/debts", icon: "💳", label: "الديون" },
     ],
   },
   {

@@ -2,28 +2,19 @@
  * DebtSummaryCard — US-604 — Emerald Dusk Theme
  * Consumes GET /api/debts/summary
  */
-import React from "react";
 import { Link } from "react-router-dom";
-
-const CATEGORY_LABELS = {
-  credit_card: "بطاقة ائتمان",
-  auto_loan:   "قرض سيارة",
-  personal:    "شخصي",
-  student:     "تعليمي",
-  mortgage:    "عقاري",
-  other:       "أخرى",
-};
 
 export default function DebtSummaryCard({ summary, loading = false }) {
   const {
     totalRemaining = 0,
-    totalDebt      = 0,
-    totalPaid      = 0,
     activeCount    = 0,
     overdueCount   = 0,
-    progressPct    = 0,
-    nearestDue     = null,
-    byCategory     = [],
+    dueSoonCount   = 0,
+    nearestDueDate = null,
+    nearestDueStatus = null,
+    estimatedSettlementDate = null,
+    needsMorePayments = false,
+    message = "",
   } = summary || {};
 
   const fmt = (n) => Number(n || 0).toLocaleString("ar-EG");
@@ -79,28 +70,6 @@ export default function DebtSummaryCard({ summary, loading = false }) {
           </span>
           <span className="text-xs font-bold" style={{ color: "var(--text-tertiary)" }}>EGP متبقي</span>
         </div>
-        <div className="mt-1 flex items-center gap-3 text-[11px]" style={{ color: "var(--text-tertiary)" }}>
-          <span>إجمالي: {fmt(totalDebt)} EGP</span>
-          <span>•</span>
-          <span style={{ color: "var(--brand-primary)" }}>مدفوع: {fmt(totalPaid)} EGP</span>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div>
-        <div className="flex items-center justify-between text-[11px] mb-1.5">
-          <span style={{ color: "var(--text-tertiary)" }}>نسبة السداد</span>
-          <span className="font-bold" style={{ color: "var(--brand-primary)" }}>{progressPct}%</span>
-        </div>
-        <div className="h-2.5 w-full overflow-hidden rounded-full" style={{ backgroundColor: "var(--bg-tertiary)" }}>
-          <div
-            className="h-full rounded-full transition-all duration-700"
-            style={{
-              width: `${Math.min(100, progressPct)}%`,
-              background: `linear-gradient(90deg, var(--brand-accent), var(--brand-primary))`,
-            }}
-          />
-        </div>
       </div>
 
       {/* Status badges */}
@@ -113,8 +82,20 @@ export default function DebtSummaryCard({ summary, loading = false }) {
             ringColor: "var(--status-info-border)",
           }}
         >
-          ✓ {activeCount} نشط
+          ✓ {activeCount} غير مكتمل
         </span>
+        {dueSoonCount > 0 && (
+          <span
+            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold ring-1"
+            style={{
+              backgroundColor: "var(--status-warning-bg)",
+              color: "var(--status-warning)",
+              ringColor: "var(--status-warning-border)",
+            }}
+          >
+            ◷ {dueSoonCount} قريب الاستحقاق
+          </span>
+        )}
         {overdueCount > 0 && (
           <span
             className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold ring-1 animate-pulse"
@@ -130,12 +111,16 @@ export default function DebtSummaryCard({ summary, loading = false }) {
       </div>
 
       {/* Nearest due */}
-      {nearestDue && (
+      {nearestDueDate && (
         <div
           className="rounded-xl border p-3"
           style={{
-            backgroundColor: "var(--status-warning-bg)",
-            borderColor: "var(--status-warning-border)",
+            backgroundColor: nearestDueStatus === "overdue"
+              ? "var(--status-danger-bg)"
+              : "var(--status-warning-bg)",
+            borderColor: nearestDueStatus === "overdue"
+              ? "var(--status-danger-border)"
+              : "var(--status-warning-border)",
           }}
         >
           <div className="flex items-center justify-between text-xs">
@@ -143,40 +128,34 @@ export default function DebtSummaryCard({ summary, loading = false }) {
             <span
               className="font-bold"
               style={{
-                color: nearestDue.status === "overdue" ? "var(--status-danger)" : "var(--brand-accent)",
+                color: nearestDueStatus === "overdue"
+                  ? "var(--status-danger)"
+                  : "var(--brand-accent)",
               }}
             >
-              {nearestDue.creditor}
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-[11px] mt-1">
-            <span style={{ color: "var(--text-tertiary)" }}>
-              {new Date(nearestDue.dueDate).toLocaleDateString("ar-EG", {
+              {new Date(nearestDueDate).toLocaleDateString("ar-EG", {
                 day: "numeric",
                 month: "long",
+                year: "numeric",
               })}
-            </span>
-            <span className="font-mono font-bold" style={{ color: "var(--text-primary)" }}>
-              {fmt(nearestDue.remainingAmount)} {nearestDue.currency || "EGP"}
             </span>
           </div>
         </div>
       )}
 
-      {/* Category breakdown (mini) */}
-      {byCategory.length > 0 && (
-        <div className="space-y-2 border-t pt-3" style={{ borderColor: "var(--border-secondary)" }}>
-          {byCategory.slice(0, 3).map((cat) => (
-            <div key={cat.category} className="flex items-center justify-between text-[11px]">
-              <span style={{ color: "var(--text-tertiary)" }}>
-                {CATEGORY_LABELS[cat.category] || cat.category}
-              </span>
-              <span className="font-mono font-bold" style={{ color: "var(--text-primary)" }}>
-                {fmt(cat.remaining)} EGP
-              </span>
-            </div>
-          ))}
-        </div>
+      {needsMorePayments ? (
+        <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+          {message || "أضف دفعات أكثر لحساب التوقع"}
+        </p>
+      ) : estimatedSettlementDate ? (
+        <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+          موعد السداد المتوقع:{" "}
+          <strong>{new Date(estimatedSettlementDate).toLocaleDateString("ar-EG")}</strong>
+        </p>
+      ) : (
+        <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+          لا توجد ديون غير مكتملة.
+        </p>
       )}
     </div>
   );

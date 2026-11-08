@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import AccountForm from "../../components/accounts/AccountForm";
 import ThemeToggle from "../../components/ThemeToggle";
-import { getAccountById, getAccounts } from "../../services/accountService";
+import { getAccountById } from "../../services/accountService";
 
 export default function AccountFormPage() {
   const { id } = useParams();
@@ -46,7 +46,7 @@ export default function AccountFormPage() {
     };
   }, [id, isEdit, initialData]);
 
-  const handleSuccess = (account) => {
+  const handleSuccess = () => {
     const toastMsg = isEdit ? "تم تعديل بيانات الحساب بنجاح" : "تمت إضافة الحساب بنجاح";
     navigate("/accounts", {
       state: {

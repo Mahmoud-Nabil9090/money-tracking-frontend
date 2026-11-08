@@ -1,5 +1,3 @@
-import React from "react";
-
 const TYPE_CONFIG = {
   daily: {
     label: "يومي (Daily)",

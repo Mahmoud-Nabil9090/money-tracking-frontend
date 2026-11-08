@@ -18,27 +18,39 @@ function IncomeSummary() {
     currency: "EGP",
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetchIncome();
+    let cancelled = false;
+    getMonthlyIncome(month, year)
+      .then((data) => {
+        if (cancelled) return;
+        setIncomeData(data);
+        setError("");
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error(err);
+        setError("حدث خطأ أثناء تحميل بيانات الدخل");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [month, year]);
 
-  const fetchIncome = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  const handleMonthChange = (value) => {
+    setLoading(true);
+    setMonth(value);
+  };
 
-      const data = await getMonthlyIncome(month, year);
-
-      setIncomeData(data);
-    } catch (err) {
-      console.error(err);
-      setError("حدث خطأ أثناء تحميل بيانات الدخل");
-    } finally {
-      setLoading(false);
-    }
+  const handleYearChange = (value) => {
+    setLoading(true);
+    setYear(value);
   };
 
   return (
@@ -93,8 +105,8 @@ function IncomeSummary() {
         <IncomeFilters
           month={month}
           year={year}
-          onMonthChange={setMonth}
-          onYearChange={setYear}
+          onMonthChange={handleMonthChange}
+          onYearChange={handleYearChange}
         />
 
         {loading && (

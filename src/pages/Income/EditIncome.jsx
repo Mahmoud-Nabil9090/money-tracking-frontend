@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import IncomeForm from "../../components/forms/IncomeForm";
 import ThemeToggle from "../../components/ThemeToggle";
@@ -15,28 +15,32 @@ function EditIncomePage() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
-  const fetchIncomeDetails = useCallback(async () => {
-    try {
-      setLoading(true);
-      setLoadError("");
-      const data = await getIncomeById(id);
-      setInitialData(data);
-    } catch (err) {
-      console.error("Error fetching income:", err);
-      setLoadError(
-        err.response?.data?.message ||
-          "لم يتم العثور على مصدر الدخل المطلوب أو حدث خطأ أثناء التحميل."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
   useEffect(() => {
-    if (!initialData && id) {
-      fetchIncomeDetails();
-    }
-  }, [id, initialData, fetchIncomeDetails]);
+    if (initialData || !id) return undefined;
+    let cancelled = false;
+
+    getIncomeById(id)
+      .then((data) => {
+        if (cancelled) return;
+        setInitialData(data);
+        setLoadError("");
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error("Error fetching income:", err);
+        setLoadError(
+          err.response?.data?.message ||
+            "لم يتم العثور على مصدر الدخل المطلوب أو حدث خطأ أثناء التحميل."
+        );
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, initialData]);
 
   const handleSubmit = async (formData) => {
     try {

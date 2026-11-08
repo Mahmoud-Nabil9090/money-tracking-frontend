@@ -27,6 +27,7 @@ import AccountDetails from "./pages/Accounts/AccountDetails";
 import Login from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./pages/Register/Register";
+import Debts from "./pages/Debts/Debts";
 
 function SuccessToast() {
   const location = useLocation();
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/debts" element={<Debts />} />
         
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -3,7 +3,7 @@
  * Global filter: This Month | Previous Month | Last 3 Months | Custom
  * Emits { period, fromDate?, toDate? } to parent via onChange
  */
-import React, { useState } from "react";
+import { useState } from "react";
 
 const PRESETS = [
   { key: "month",      label: "هذا الشهر" },

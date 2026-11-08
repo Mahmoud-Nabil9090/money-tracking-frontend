@@ -1,4 +1,3 @@
-import React from "react";
 import AccountCard from "./AccountCard";
 
 function AccountList({ accounts, onArchive, onRestore, emptyMessage = "لا توجد حسابات مسجلة." }) {

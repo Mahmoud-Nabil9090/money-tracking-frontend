@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import AccountTypeSelector from "./AccountTypeSelector";
 import { createAccount, updateAccount } from "../../services/accountService";
 
@@ -40,18 +40,6 @@ export default function AccountForm({
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        name: initialData.name || "",
-        type: initialData.type || "bank",
-        balance: initialData.balance !== undefined ? String(initialData.balance) : "0",
-        currency: initialData.currency || "EGP",
-        color: initialData.color || "#0d9488",
-      });
-    }
-  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

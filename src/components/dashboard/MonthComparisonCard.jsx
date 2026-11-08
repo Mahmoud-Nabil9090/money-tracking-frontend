@@ -2,8 +2,6 @@
  * MonthComparisonCard — US-605 — Emerald Dusk Theme
  * Shows Income & Expense difference: This Month vs Last Month
  */
-import React from "react";
-
 function calcDiff(current, previous) {
   if (previous === null || previous === undefined) return null;
   const diff    = current - previous;

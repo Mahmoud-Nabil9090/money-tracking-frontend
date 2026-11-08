@@ -1,5 +1,3 @@
-import React from "react";
-
 function formatDate(date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
